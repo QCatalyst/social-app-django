@@ -1,2 +1,2 @@
 six
-social-auth-core >= 1.2.0
+git+https://github.com/QCatalyst/social-core.git
