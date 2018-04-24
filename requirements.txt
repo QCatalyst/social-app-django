@@ -1,2 +1,2 @@
 six
-git+https://github.com/QCatalyst/social-core.git
+social-auth-core-fork >= 1.2.0

@@ -6,7 +6,7 @@ from django.views.decorators.http import require_POST
 from django.views.decorators.cache import never_cache
 
 from social_core.utils import setting_name
-from social_core.actions import do_auth, do_complete, do_disconnect
+from social_core.actions import do_auth, do_complete, do_disconnect, do_slo, do_complete_logout
 from .utils import psa
 
 
@@ -42,6 +42,21 @@ def disconnect(request, backend, association_id=None):
     """Disconnects given backend from current logged in user."""
     return do_disconnect(request.backend, request.user, association_id,
                          redirect_name=REDIRECT_FIELD_NAME)
+
+
+@never_cache
+@psa('{0}:end'.format(NAMESPACE))
+def slo(request, backend):
+    return do_slo(request.backend, redirect_name=REDIRECT_FIELD_NAME)
+
+
+@never_cache
+@csrf_exempt
+@psa('{0}:complete_logout'.format(NAMESPACE))
+def complete_logout(request, backend, *args, **kwargs):
+    """Authentication complete view"""
+    return do_complete_logout(request.backend, request.user,
+                              redirect_name=REDIRECT_FIELD_NAME, *args, **kwargs)
 
 
 def get_session_timeout(social_user, enable_session_expiration=False,
